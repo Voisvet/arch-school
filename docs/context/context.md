@@ -8,14 +8,40 @@
 
 LAYOUT_WITH_LEGEND()
 
-Person(pbc, "Personal Banking Customer", "A customer of the bank, with personal bank accounts.")
-System(ibs, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
-System_Ext(es, "E-mail system", "The internal Microsoft Exchange e-mail system.")
-System_Ext(mbs, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+Person(viewer, "Зритель", "Участник конференции, прослушивающий доклады.")
+Person(reporter, "Докладчик", "Участник конференции, читающий свой доклад.")
+Person(reviewer, "Ревьювер", "Сотрудник компании, проверяющий доклад на соответствование требованиям и допускающий доклад на конференцию.")
+Person(admin, "Администратор", "Сотрудник компании, организующий конференцию.")
+Person(moderator, "Модератор", "Сотрудник компании, организующий проведение конференции в конкретной комнате.")
+System(cms, "Система управления конференцией", "ПО для подготовки и проведения конференции с участием заинтересованных лиц.")
+System_Ext(es, "E-mail сервер", "Корпоративная почтовая система.")
+System_Ext(yt, "YouTube", "Система для трансляции видео-потока.")
+System_Ext(zoom, "Zoom", "Система для организации видео-конференции.")
 
-Rel(pbc, ibs, "Uses")
-Rel(es, pbc, "Sends e-mails to")
-Rel(ibs, es, "Sends e-mails", "SMTP")
-Rel(ibs, mbs, "Uses")
+Rel(viewer, cms, "Регистрируется в системе")
+Rel(viewer, cms, "Получает ссылку на YouTube-трансляцию")
+
+Rel(reporter, cms, "Регистрируется в системе")
+Rel(reporter, cms, "Подаёт доклад")
+Rel(reporter, cms, "Корректирует доклад по комментариям")
+Rel(reporter, cms, "Получает ссылку на Zoom-комнату")
+
+Rel(reviewer, cms, "Просматривает доклад")
+Rel(reviewer, cms, "Направляет комментарии для исправления доклада")
+Rel(reviewer, cms, "Принимает или отклоняет доклад")
+
+Rel(admin, cms, "Управляет расписанием конференции")
+Rel(admin, cms, "Управляет информационными сообщениями вне трансляци")
+
+Rel(moderator, cms, "Управляет информационными сообщениями во время трансляции")
+Rel(moderator, cms, "Получает ссылку на Zoon-комнату")
+
+Rel(cms, es, "Отправляет письма Зрителям")
+Rel(cms, es, "Отправляет письма Докладчикам")
+Rel(cms, es, "Отправляет письма Ревьюверам")
+
+Rel(cms, yt, "Создаёт трансляцию")
+
+Rel(cms, yt, "Создаёт комнату для конференции")
 @enduml
 ```

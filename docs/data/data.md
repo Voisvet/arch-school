@@ -8,89 +8,84 @@
 ```plantuml
 @startuml
 ' Логическая модель данных в варианте UML Class Diagram (альтернатива ER-диаграмме).
-namespace ShoppingCart {
 
- class ShoppingCart
- {
-  id : string
-  createDate : datetime
-  updateDate : datetime
-  customer : Customer
-  price : ShoppingCartPrice
-  cartItems : CartItem[]
- }
+namespace Conference {
+  class Reporter {
+    name : string
+    email : string
+    report : Report
+  }
 
- class ShoppingCartPrice
- {
-  type : CartItemPrice
- }
- class CartItemPrice
- {
-  type : CartItemPriceType
- }
+  class Viewer {
+    name : string
+    email : string
+  }
 
- enum CartPriceType
- {
-  total
-  grandTotal
-  offeringDiscount
-  couponsDiscount
- }
+  class Reviewer {
+    name : string
+    email : string
+    role : ReviewerRole
+    reports : Report[]
+  }
 
- class CartItem
- {
-  id : string
-  quantity : int
-  offering : Offering
-  relationship : CartItemRelationShip[]
-  price : CartItemPrice[]
-  status : CartItemStatus
- }
+  class Moderator {
+    name : string
+    email : string
+    room : Room
+  }
 
-  class Customer
- {
-  id : string
- }
- 
- class Offering
- {
-  id : string
-  isQuantifiable : boolean
-  actionType : OfferingActionType
-  validFor : ValidFor
- }
-  
- class ProductSpecificationRef
- {
-  id : string
- }
- 
- ShoppingCart *-- "1..*" ShoppingCartPrice
- ShoppingCartPrice -- CartPriceType
- ShoppingCart *-- "*" CartItem
- CartItem *-- "*" CartItemPrice
- CartItemPrice -- CartPriceType
- CartItem *-- "1" Offering
- Offering *-- "1" ProductSpecificationRef
- Offering *-- "0..1" ProductConfiguration
- ShoppingCart *-- "1" Customer
-}
+  class Administrator {
+    name : string
+    email : string
+  }
 
-namespace Ordering {
- ProductOrder *-- OrderItem
- OrderItem *-- Product
- Product *-- ProductSpecificationRef
- ProductOrder *-- Party
-}
+  class ProgramEntity {
+    report : Report
+    startTime : datetime
+  }
 
-namespace ProductCatalog {
- ShoppingCart.ProductSpecificationRef ..> ProductSpecification : ref
- Ordering.ProductSpecificationRef ..> ProductSpecification : ref
-}
+  class Report {
+    topic : string
+    presentation : string
+    duration : integer
+    status : ReportStatus
+  }
 
-namespace CX {
- ShoppingCart.Customer ..> Customer : ref
- Ordering.Party ..> Customer : ref
+  class Recommendation {
+    autor : Reviewer
+    report : Report
+    comment : string
+  }
+
+  class Room {
+    program : ProgramEntity[]
+    translation : Translation
+  }
+
+  class Translation {}
+
+  enum ReviewerRole {
+    programCommittee
+    lawyer
+  }
+
+  enum ReportStatus {
+    draft
+    declined
+    accepted
+    onReview
+  }
+
+  ReviewerRole -- Reviewer
+  ReportStatus -- Report
+
+  Reporter *-- "1" Report
+  Reviewer *-- "0..*" Report
+  Moderator *-- "1" Room
+  ProgramEntity *-- "1" Report
+  Report *-- "0..*" Recommendation
+  Room *-- "1..*" ProgramEntity
+  Room *-- "1" Translation
 }
 @enduml
 ```
